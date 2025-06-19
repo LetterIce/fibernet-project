@@ -9,8 +9,14 @@ use CodeIgniter\Router\RouteCollection;
 // Public Routes
 $routes->get('/', 'Paket::index');
 $routes->get('/paket', 'Paket::index');
+
+// Area/Cek Area Routes - consolidated
 $routes->get('/cek-area', 'Area::index');
-$routes->post('/cek-area/proses', 'Area::proses'); // Untuk memproses form
+$routes->get('area', 'Area::index');
+$routes->post('/cek-area/proses', 'Area::proses');
+$routes->post('area/proses', 'Area::proses');
+$routes->post('/cek-area/checkByCoordinates', 'Area::checkByCoordinates');
+$routes->post('area/checkByCoordinates', 'Area::checkByCoordinates');
 
 // Auth Routes
 $routes->get('/login', 'Auth::index');
