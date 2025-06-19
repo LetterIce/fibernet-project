@@ -261,34 +261,6 @@ Buat paket internet baru untuk pelanggan
                 </div>
             </div>
         </div>
-
-        <!-- Tips Card -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 mt-6">
-            <div class="p-6">
-                <h3 class="font-semibold text-gray-900 mb-4 flex items-center">
-                    <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>
-                    Tips Membuat Paket
-                </h3>
-                <div class="space-y-3">
-                    <div class="flex items-start">
-                        <i class="fas fa-check-circle text-green-500 mr-3 mt-1 flex-shrink-0"></i>
-                        <p class="text-sm text-gray-600">Gunakan nama yang mudah diingat dan menarik</p>
-                    </div>
-                    <div class="flex items-start">
-                        <i class="fas fa-check-circle text-green-500 mr-3 mt-1 flex-shrink-0"></i>
-                        <p class="text-sm text-gray-600">Deskripsikan keunggulan dengan jelas dan ringkas</p>
-                    </div>
-                    <div class="flex items-start">
-                        <i class="fas fa-check-circle text-green-500 mr-3 mt-1 flex-shrink-0"></i>
-                        <p class="text-sm text-gray-600">Tentukan harga yang kompetitif di pasaran</p>
-                    </div>
-                    <div class="flex items-start">
-                        <i class="fas fa-check-circle text-green-500 mr-3 mt-1 flex-shrink-0"></i>
-                        <p class="text-sm text-gray-600">Tandai paket terbaik sebagai populer</p>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 
