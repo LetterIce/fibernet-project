@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Models\PackageModel;
 
-class Paket extends BaseController
+class Home extends BaseController
 {
     public function index()
     {
@@ -14,6 +14,6 @@ class Paket extends BaseController
             'packages' => $packageModel->findAll()
         ];
         
-        return view('paket/index', $data);
+        return view('home/index', $data);
     }
 }

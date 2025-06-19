@@ -51,16 +51,22 @@ Perbarui informasi paket internet
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                            <div class="text-sm text-blue-700">Views</div>
-                            <div class="text-lg font-semibold text-blue-900"><?= $package['views'] ?? 0 ?></div>
-                        </div>
-                        <div>
-                            <div class="text-sm text-blue-700">Subscribers</div>
-                            <div class="text-lg font-semibold text-blue-900"><?= $package['subscribers'] ?? 0 ?></div>
+                            <div class="text-sm text-blue-700">Dibuat</div>
+                            <div class="text-lg font-semibold text-blue-900">
+                                <?= $package['created_at'] ? date('d M Y', strtotime($package['created_at'])) : 'Belum tersimpan' ?>
+                            </div>
                         </div>
                         <div>
                             <div class="text-sm text-blue-700">Terakhir diupdate</div>
-                            <div class="text-lg font-semibold text-blue-900"><?= date('d M Y', strtotime($package['updated_at'] ?? $package['created_at'])) ?></div>
+                            <div class="text-lg font-semibold text-blue-900">
+                                <?= $package['updated_at'] ? date('d M Y', strtotime($package['updated_at'])) : 'Belum pernah' ?>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="text-sm text-blue-700">Status Popular</div>
+                            <div class="text-lg font-semibold text-blue-900">
+                                <?= $package['popular'] === 'true' ? 'Ya' : 'Tidak' ?>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -83,6 +89,17 @@ Perbarui informasi paket internet
 
                 <form action="/admin/paket/update/<?= $package['id'] ?>" method="post" id="packageForm" class="space-y-8">
                     <?= csrf_field() ?>
+                    
+                    <!-- Debug info (remove this after fixing) -->
+                    <?php if (ENVIRONMENT === 'development'): ?>
+                        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                            <h4 class="font-medium text-yellow-800 mb-2">Debug Info:</h4>
+                            <p class="text-sm text-yellow-700">Current popular status: <?= $package['popular'] ?></p>
+                            <p class="text-sm text-yellow-700">Package ID: <?= $package['id'] ?></p>
+                        </div>
+                    <?php endif; ?>
+
+                    <input type="hidden" name="_method" value="POST">
                     
                     <!-- Basic Information -->
                     <div>
@@ -204,14 +221,15 @@ Perbarui informasi paket internet
                                 <h4 class="font-medium text-gray-900 mb-4">Status & Visibilitas</h4>
                                 <div class="space-y-4">
                                     <label class="flex items-center">
-                                        <input type="checkbox" class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" id="is_active" name="is_active" value="1" <?= ($package['is_active'] ?? true) ? 'checked' : '' ?>>
+                                        <input type="checkbox" class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" id="is_active" name="is_active" value="1" checked>
                                         <span class="ml-3 text-sm text-gray-700 flex items-center">
                                             <i class="fas fa-eye text-green-500 mr-2"></i>
                                             Aktifkan paket
                                         </span>
                                     </label>
                                     <label class="flex items-center">
-                                        <input type="checkbox" class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" id="is_popular" name="is_popular" value="1" <?= ($package['is_popular'] ?? false) ? 'checked' : '' ?>>
+                                        <input type="hidden" name="popular" value="0">
+                                        <input type="checkbox" class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" id="is_popular" name="popular" value="1" <?= $package['popular'] === 'true' ? 'checked' : '' ?>>
                                         <span class="ml-3 text-sm text-gray-700 flex items-center">
                                             <i class="fas fa-star text-yellow-500 mr-2"></i>
                                             Tandai sebagai populer
@@ -300,8 +318,8 @@ Perbarui informasi paket internet
                     </div>
                     <div>
                         <p class="text-sm text-gray-600">Popular</p>
-                        <span id="previewPopular" class="inline-block px-4 py-2 <?= ($package['is_popular'] ?? false) ? 'bg-yellow-600 text-white' : 'bg-gray-300 text-gray-600' ?> rounded-lg text-sm font-medium">
-                            <?= ($package['is_popular'] ?? false) ? 'Ya' : 'Tidak' ?>
+                        <span id="previewPopular" class="inline-block px-4 py-2 <?= $package['popular'] === 'true' ? 'bg-yellow-600 text-white' : 'bg-gray-300 text-gray-600' ?> rounded-lg text-sm font-medium">
+                            <?= $package['popular'] === 'true' ? 'Ya' : 'Tidak' ?>
                         </span>
                     </div>
                 </div>
@@ -309,4 +327,79 @@ Perbarui informasi paket internet
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const nameInput = document.getElementById('name');
+    const speedInput = document.getElementById('speed');
+    const priceInput = document.getElementById('price');
+    const descInput = document.getElementById('description');
+    const isPopularCheck = document.getElementById('is_popular');
+    const form = document.getElementById('packageForm');
+    
+    // Debug form submission
+    form.addEventListener('submit', function(e) {
+        console.log('Form being submitted...');
+        console.log('Popular checkbox checked:', isPopularCheck.checked);
+        console.log('Popular checkbox value:', isPopularCheck.value);
+        
+        // Let the form submit normally
+    });
+    
+    function updatePreview() {
+        // Update name
+        const name = nameInput.value.trim() || '<?= esc($package['name']) ?>';
+        document.getElementById('previewName').textContent = name;
+        
+        // Update description
+        const desc = descInput.value.trim() || '<?= esc($package['description']) ?>';
+        document.getElementById('previewDesc').textContent = desc;
+        
+        // Update speed
+        const speed = speedInput.value || '<?= $package['speed'] ?>';
+        document.getElementById('previewSpeed').textContent = speed + ' Mbps';
+        
+        // Update price
+        const price = priceInput.value || '<?= $package['price'] ?>';
+        if (price) {
+            const formattedPrice = new Intl.NumberFormat('id-ID').format(price);
+            document.getElementById('previewPrice').textContent = 'Rp ' + formattedPrice;
+        }
+        
+        // Update popular badge
+        const popularBadge = document.getElementById('previewPopular');
+        if (isPopularCheck.checked) {
+            popularBadge.className = 'inline-block px-4 py-2 bg-yellow-600 text-white rounded-lg text-sm font-medium';
+            popularBadge.textContent = 'Ya';
+        } else {
+            popularBadge.className = 'inline-block px-4 py-2 bg-gray-300 text-gray-600 rounded-lg text-sm font-medium';
+            popularBadge.textContent = 'Tidak';
+        }
+    }
+    
+    // Add event listeners
+    [nameInput, speedInput, priceInput, descInput].forEach(input => {
+        input.addEventListener('input', updatePreview);
+    });
+    
+    isPopularCheck.addEventListener('change', updatePreview);
+});
+
+function addFeature() {
+    const container = document.getElementById('featuresContainer');
+    const newFeature = document.createElement('div');
+    newFeature.className = 'flex space-x-3';
+    newFeature.innerHTML = `
+        <input type="text" class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" name="features[]" placeholder="Fitur unggulan">
+        <button type="button" class="px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors" onclick="this.parentElement.remove()">
+            <i class="fas fa-minus"></i>
+        </button>
+    `;
+    container.appendChild(newFeature);
+}
+
+function saveDraft() {
+    alert('Draft akan disimpan');
+}
+</script>
 <?= $this->endSection() ?>

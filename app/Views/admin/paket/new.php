@@ -168,7 +168,7 @@ Buat paket internet baru untuk pelanggan
                                         </span>
                                     </label>
                                     <label class="flex items-center">
-                                        <input type="checkbox" class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" id="is_popular" name="is_popular" value="1">
+                                        <input type="checkbox" class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" id="is_popular" name="popular" value="1">
                                         <span class="ml-3 text-sm text-gray-700 flex items-center">
                                             <i class="fas fa-star text-yellow-500 mr-2"></i>
                                             Tandai sebagai populer
@@ -280,13 +280,26 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Update description
         const desc = descInput.value.trim() || 'Deskripsi paket akan muncul di sini';
+        document.getElementById('previewDesc').textContent = desc;
+        
+        // Update speed
+        const speed = speedInput.value || '0';
+        document.getElementById('previewSpeed').textContent = speed + ' Mbps';
+        
+        // Update price
+        const price = priceInput.value || '0';
+        if (price) {
+            const formattedPrice = new Intl.NumberFormat('id-ID').format(price);
+            document.getElementById('previewPrice').textContent = 'Rp ' + formattedPrice;
+        }
+        
         // Update popular badge
         const popularBadge = document.getElementById('previewPopular');
         if (isPopularCheck.checked) {
-            popularBadge.className = 'badge bg-warning text-dark';
+            popularBadge.className = 'inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800';
             popularBadge.textContent = 'Ya';
         } else {
-            popularBadge.className = 'badge bg-secondary';
+            popularBadge.className = 'inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800';
             popularBadge.textContent = 'Tidak';
         }
     }
@@ -301,7 +314,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Quota settings toggle
     hasQuotaCheck.addEventListener('change', function() {
         const quotaSettings = document.getElementById('quotaSettings');
-        quotaSettings.style.display = this.checked ? 'block' : 'none';
+        quotaSettings.classList.toggle('hidden', !this.checked);
     });
     
     // Initial preview update
@@ -311,10 +324,10 @@ document.addEventListener('DOMContentLoaded', function() {
 function addFeature() {
     const container = document.getElementById('featuresContainer');
     const newFeature = document.createElement('div');
-    newFeature.className = 'input-group mb-3';
+    newFeature.className = 'flex space-x-3';
     newFeature.innerHTML = `
-        <input type="text" class="form-control" name="features[]" placeholder="Fitur unggulan">
-        <button type="button" class="btn btn-outline-danger" onclick="this.parentElement.remove()">
+        <input type="text" class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" name="features[]" placeholder="Fitur unggulan">
+        <button type="button" class="px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors" onclick="this.parentElement.remove()">
             <i class="fas fa-minus"></i>
         </button>
     `;
@@ -322,7 +335,6 @@ function addFeature() {
 }
 
 function saveDraft() {
-    // Implement save draft functionality
     alert('Draft akan disimpan');
 }
 </script>

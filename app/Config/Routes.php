@@ -7,8 +7,8 @@ use CodeIgniter\Router\RouteCollection;
  */
 // ...
 // Public Routes
-$routes->get('/', 'Paket::index');
-$routes->get('/paket', 'Paket::index');
+$routes->get('/', 'Home::index');
+$routes->get('/paket', 'Home:index');
 
 // Area/Cek Area Routes - consolidated
 $routes->get('/cek-area', 'Area::index');
@@ -32,18 +32,18 @@ $routes->group('', ['filter' => 'auth'], function($routes) {
 });
 
 // Admin Routes (Grouped and Protected by a Filter)
-$routes->group('admin', ['filter' => 'auth:admin'], function($routes) {
-    $routes->get('/', 'admin\Dashboard::index');
+$routes->group('admin', ['filter' => 'auth:admin', 'namespace' => 'App\Controllers\Admin'], function($routes) {
+    $routes->get('/', 'Dashboard::index');
     
     // CRUD Routes for Packages
-    $routes->get('paket', 'admin\PaketController::index');
-    $routes->get('paket/new', 'admin\PaketController::new');
-    $routes->post('paket/create', 'admin\PaketController::create');
-    $routes->get('paket/view/(:num)', 'admin\PaketController::show/$1');
-    $routes->get('paket/edit/(:num)', 'admin\PaketController::edit/$1');
-    $routes->post('paket/update/(:num)', 'admin\PaketController::update/$1');
-    $routes->delete('paket/delete/(:num)', 'admin\PaketController::delete/$1');
+    $routes->get('paket', 'PaketController::index');
+    $routes->get('paket/new', 'PaketController::new');
+    $routes->post('paket/create', 'PaketController::create');
+    $routes->get('paket/view/(:num)', 'PaketController::view/$1');
+    $routes->get('paket/edit/(:num)', 'PaketController::edit/$1');
+    $routes->post('paket/update/(:num)', 'PaketController::update/$1');
+    $routes->delete('paket/delete/(:num)', 'PaketController::delete/$1');
     $routes->post('paket/toggle-status/(:num)', 'admin\PaketController::toggleStatus/$1');
-    $routes->post('paket/toggle-popular/(:num)', 'admin\PaketController::togglePopular/$1');
-    
+    $routes->post('paket/toggle-popular/(:num)', 'PaketController::togglePopular/$1');
+    $routes->get('paket/export', 'PaketController::export');
 });

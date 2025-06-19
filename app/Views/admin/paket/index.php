@@ -18,10 +18,10 @@ Kelola paket internet yang tersedia untuk pelanggan
         <i class="fas fa-filter mr-2"></i>
         Filter
     </button>
-    <button type="button" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors">
+    <a href="/admin/paket/export" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors" id="exportBtn">
         <i class="fas fa-download mr-2"></i>
         Export
-    </button>
+    </a>
     <a href="/admin/paket/new" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-blue-700 transition-colors">
         <i class="fas fa-plus mr-2"></i>
         Tambah Paket
@@ -61,7 +61,7 @@ Kelola paket internet yang tersedia untuk pelanggan
             </div>
             <div class="ml-4">
                 <p class="text-sm text-gray-600">Paket Aktif</p>
-                <p class="text-2xl font-bold text-gray-900"><?= count(array_filter($packages, fn($p) => ($p['status'] ?? 'active') === 'active')) ?></p>
+                <p class="text-2xl font-bold text-gray-900"><?= count($packages) ?></p>
             </div>
         </div>
     </div>
@@ -73,7 +73,7 @@ Kelola paket internet yang tersedia untuk pelanggan
             </div>
             <div class="ml-4">
                 <p class="text-sm text-gray-600">Paket Popular</p>
-                <p class="text-2xl font-bold text-gray-900"><?= count(array_filter($packages, fn($p) => $p['is_popular'] ?? false)) ?></p>
+                <p class="text-2xl font-bold text-gray-900"><?= count(array_filter($packages, fn($p) => $p['popular'] === 'true')) ?></p>
             </div>
         </div>
     </div>
@@ -85,7 +85,7 @@ Kelola paket internet yang tersedia untuk pelanggan
             </div>
             <div class="ml-4">
                 <p class="text-sm text-gray-600">Total Pelanggan</p>
-                <p class="text-2xl font-bold text-gray-900"><?= array_sum(array_column($packages, 'subscribers')) ?></p>
+                <p class="text-2xl font-bold text-gray-900">0</p>
             </div>
         </div>
     </div>
@@ -123,7 +123,7 @@ Kelola paket internet yang tersedia untuk pelanggan
     <?php foreach ($packages as $package): ?>
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 relative" data-package-id="<?= $package['id'] ?>">
             <!-- Popular Badge -->
-            <?php if ($package['is_popular'] ?? false): ?>
+            <?php if ($package['popular'] === 'true'): ?>
                 <div class="absolute top-4 right-4 z-10">
                     <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
                         <i class="fas fa-star mr-1"></i>Popular
@@ -159,18 +159,21 @@ Kelola paket internet yang tersedia untuk pelanggan
                 <!-- Package Stats -->
                 <div class="grid grid-cols-3 gap-4 mb-6 py-4 border-t border-gray-100">
                     <div class="text-center">
-                        <div class="text-sm text-gray-500">Views</div>
-                        <div class="font-semibold text-gray-900"><?= $package['views'] ?? 0 ?></div>
+                        <div class="text-sm text-gray-500">Created</div>
+                        <div class="font-semibold text-gray-900 text-xs">
+                            <?= $package['created_at'] ? date('d/m/Y', strtotime($package['created_at'])) : '-' ?>
+                        </div>
                     </div>
                     <div class="text-center">
-                        <div class="text-sm text-gray-500">Subscribers</div>
-                        <div class="font-semibold text-gray-900"><?= $package['subscribers'] ?? 0 ?></div>
+                        <div class="text-sm text-gray-500">Updated</div>
+                        <div class="font-semibold text-gray-900 text-xs">
+                            <?= $package['updated_at'] ? date('d/m/Y', strtotime($package['updated_at'])) : '-' ?>
+                        </div>
                     </div>
                     <div class="text-center">
                         <div class="text-sm text-gray-500">Status</div>
-                        <?php $status = $package['status'] ?? 'active'; ?>
-                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium <?= $status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' ?>">
-                            <?= ucfirst($status) ?>
+                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                            Aktif
                         </span>
                     </div>
                 </div>
@@ -246,19 +249,58 @@ document.addEventListener('click', function(e) {
 
 function togglePopular(id) {
     if (confirm('Toggle status popular untuk paket ini?')) {
-        console.log('Toggle popular for package:', id);
+        fetch(`/admin/paket/toggle-popular/${id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload(); // Reload to show updated status
+            } else {
+                alert('Gagal mengubah status: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat mengubah status');
+        });
     }
 }
 
 function duplicatePackage(id) {
     if (confirm('Duplikat paket ini?')) {
+        // Implement duplication logic
         console.log('Duplicate package:', id);
     }
 }
 
 function deletePackage(id) {
     if (confirm('Yakin ingin menghapus paket ini? Tindakan ini tidak dapat dibatalkan.')) {
-        console.log('Delete package:', id);
+        fetch(`/admin/paket/delete/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Gagal menghapus paket: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat menghapus paket');
+        });
     }
 }
 
@@ -271,6 +313,30 @@ document.getElementById('searchInput').addEventListener('input', function() {
         const text = card.textContent.toLowerCase();
         card.style.display = text.includes(searchTerm) ? '' : 'none';
     });
+});
+
+// Export functionality
+document.getElementById('exportBtn').addEventListener('click', function(e) {
+    e.preventDefault();
+    
+    // Show loading state
+    const originalText = this.innerHTML;
+    this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Mengexport...';
+    this.style.pointerEvents = 'none';
+    
+    // Create a temporary link and trigger download
+    const link = document.createElement('a');
+    link.href = '/admin/paket/export';
+    link.download = '';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // Reset button state after a delay
+    setTimeout(() => {
+        this.innerHTML = originalText;
+        this.style.pointerEvents = 'auto';
+    }, 2000);
 });
 </script>
 <?= $this->endSection() ?>

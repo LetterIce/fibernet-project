@@ -108,10 +108,10 @@ Paket Internet
                 </button>
 
                 <!-- Scrollable Container -->
-                <div id="packagesContainer" class="overflow-hidden">
+                <div id="packagesContainer" class="overflow-hidden py-2 px-2">
                     <div id="packagesScroll" class="flex gap-8 transition-transform duration-500 ease-in-out">
                         <?php foreach ($packages as $index => $pkg): ?>
-                        <div class="flex-shrink-0 w-full max-w-sm bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow duration-300 <?= $index === 1 ? 'ring-2 ring-primary' : '' ?>">
+                        <div class="flex-shrink-0 w-full max-w-sm bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow duration-300 <?= $index === 1 ? 'ring-2 ring-primary' : '' ?> <?= $index === 1 ? 'my-1' : '' ?>">
                             <?php if ($index === 1): ?>
                             <div class="bg-primary text-white text-center py-2 text-sm font-medium">
                                 <span data-lang="id">PALING POPULER</span>
@@ -577,7 +577,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Update card width based on viewport
         function updateCardWidth() {
-            const containerWidth = packagesContainer.offsetWidth;
+            const containerWidth = packagesContainer.offsetWidth - 16; // Account for px-2 padding (8px each side)
             const cardWidth = containerWidth / cardsPerView;
             Array.from(cards).forEach(card => {
                 card.style.minWidth = `${cardWidth - 32}px`; // 32px for gap
