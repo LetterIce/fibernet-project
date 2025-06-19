@@ -2,19 +2,20 @@
 
 use App\Libraries\CoverageChecker;
 use App\Libraries\GoogleMapsService;
-use Config\GoogleMaps;
 
 class Area extends BaseController
 {
     public function index()
     {
-        $config = new GoogleMaps();
         $checker = new CoverageChecker();
         
         $data = [
-            'google_maps_api_key' => $config->apiKey,
-            'default_center' => $config->defaultCenter,
-            'default_zoom' => $config->defaultZoom,
+            'google_maps_api_key' => env('GOOGLE_MAPS_API_KEY', ''),
+            'default_center' => [
+                'lat' => -6.2088,
+                'lng' => 106.8456
+            ],
+            'default_zoom' => 13,
             'covered_areas' => $checker->getAllCoveredAreas()
         ];
         

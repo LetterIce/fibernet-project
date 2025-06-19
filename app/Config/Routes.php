@@ -18,6 +18,7 @@ $routes->post('area/proses', 'Area::proses');
 $routes->post('/cek-area/checkByCoordinates', 'Area::checkByCoordinates');
 $routes->post('area/checkByCoordinates', 'Area::checkByCoordinates');
 
+
 // Auth Routes
 $routes->get('/login', 'Auth::index');
 $routes->post('/login', 'Auth::proses');
