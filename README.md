@@ -1,5 +1,7 @@
 # FiberNet Project
 
+<img width="1268" alt="{FFB278AE-A1A1-4F1E-A9D3-F5989D170AC6}" src="https://github.com/user-attachments/assets/84532c5c-771a-4271-84d1-53df177e8057" />
+
 A modern fiber optic network management system built with CodeIgniter 4. This application provides comprehensive tools for managing fiber optic infrastructure, monitoring network performance, and handling customer installations.
 
 ## 🚀 Features
