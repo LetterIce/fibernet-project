@@ -9,7 +9,7 @@ class GoogleMaps extends BaseConfig
      * Get your API key from: https://console.cloud.google.com/
      * Required APIs: Maps JavaScript API, Geocoding API
      */
-    public $apiKey = 'AIzaSyCobOKq3hzi-qHJfwJnajguWHykOfBDJCc';
+    public $apiKey;
     
     /**
      * Default map center (Jakarta coordinates)
@@ -23,4 +23,12 @@ class GoogleMaps extends BaseConfig
      * Default zoom level
      */
     public $defaultZoom = 13;
+
+    public function __construct()
+    {
+        parent::__construct();
+        
+        // Load API key from environment variable
+        $this->apiKey = env('GOOGLE_MAPS_API_KEY', '');
+    }
 }
