@@ -1,0 +1,14 @@
+/* Smooth scrolling for the entire page */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Enhance the scroll target visibility */
+#packages {
+    scroll-margin-top: 2rem;
+}
+
+/* Animation for language switching */
+[data-lang] {
+    transition: opacity 0.3s ease-in-out;
+}
