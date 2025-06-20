@@ -82,9 +82,19 @@ class PackageModel extends Model
     }
 
     // Custom methods for specific queries
+    public function getAvailablePackages()
+    {
+        return $this->orderBy('speed', 'ASC')->findAll();
+    }
+
     public function getPopularPackages()
     {
-        return $this->where('popular', 'true')->findAll();
+        return $this->where('popular', true)->orderBy('speed', 'ASC')->findAll();
+    }
+
+    public function getPackageById($id)
+    {
+        return $this->find($id);
     }
 
     public function getActivePackages()

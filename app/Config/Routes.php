@@ -18,6 +18,9 @@ $routes->post('area/proses', 'Area::proses');
 $routes->post('/cek-area/checkByCoordinates', 'Area::checkByCoordinates');
 $routes->post('area/checkByCoordinates', 'Area::checkByCoordinates');
 
+// Package routes - using Dashboard controller
+$routes->get('packages/available', 'Dashboard::availablePackages');
+$routes->post('packages/upgrade', 'Dashboard::upgradePackage');
 
 // Auth Routes
 $routes->get('/login', 'Auth::index');
