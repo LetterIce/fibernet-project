@@ -190,7 +190,7 @@ Kelola paket internet yang tersedia untuk pelanggan
                         <button type="button" class="inline-flex items-center justify-center p-2 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors" onclick="toggleDropdown(<?= $package['id'] ?>)">
                             <i class="fas fa-ellipsis-v"></i>
                         </button>
-                        <div id="dropdown-<?= $package['id'] ?>" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
+                        <div id="dropdown-<?= $package['id'] ?>" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
                             <div class="py-1">
                                 <button class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="togglePopular(<?= $package['id'] ?>)">
                                     <i class="fas fa-star mr-2"></i>Toggle Popular
@@ -339,4 +339,25 @@ document.getElementById('exportBtn').addEventListener('click', function(e) {
     }, 2000);
 });
 </script>
+
+<style>
+/* Ensure proper z-index layering */
+.admin-header {
+    z-index: 1000 !important;
+}
+
+.admin-sidebar {
+    z-index: 999 !important;
+}
+
+.main-content {
+    z-index: 1 !important;
+}
+
+/* Fix content scrolling under header */
+body {
+    position: relative;
+}
+</style>
+
 <?= $this->endSection() ?>

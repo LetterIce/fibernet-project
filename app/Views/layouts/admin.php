@@ -31,11 +31,30 @@
             }
         }
     </script>
+
+    <style>
+        /* Fix header z-index and positioning */
+        .admin-header {
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 1000 !important;
+            background: white !important;
+        }
+        
+        .admin-sidebar {
+            z-index: 999 !important;
+        }
+        
+        .main-content {
+            z-index: 1 !important;
+            position: relative;
+        }
+    </style>
 </head>
 <body class="bg-gray-50 font-sans">
     <div class="flex min-h-screen">
         <!-- Sidebar -->
-        <nav class="w-64 bg-white shadow-lg border-r border-gray-200 fixed h-full z-10">
+        <nav class="admin-sidebar w-64 bg-white shadow-lg border-r border-gray-200 fixed h-full z-10">
             <div class="p-6 border-b border-gray-100">
                 <div class="flex items-center space-x-3">
                     <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
@@ -82,9 +101,9 @@
         </nav>
 
         <!-- Main content -->
-        <div class="flex-1 ml-64">
+        <div class="main-content flex-1 ml-64">
             <!-- Header -->
-            <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-5">
+            <header class="admin-header bg-white shadow-sm border-b border-gray-200 sticky top-0 z-5">
                 <div class="px-6 py-4">
                     <div class="flex items-center justify-between">
                         <div>

@@ -96,7 +96,7 @@
                     </div>
                     <div class="ml-4">
                         <p class="text-sm font-medium text-gray-600">Pendapatan/Bulan</p>
-                        <p class="text-lg font-semibold text-gray-900">Rp <?= number_format(($pelanggan_aktif ?? 0) * $package['price'], 0, ',', '.') ?></p>
+                        <p class="text-lg font-semibold text-gray-900">Rp <?= number_format($monthly_revenue ?? 0, 0, ',', '.') ?></p>
                     </div>
                 </div>
             </div>

@@ -89,15 +89,6 @@ Perbarui informasi paket internet
 
                 <form action="/admin/paket/update/<?= $package['id'] ?>" method="post" id="packageForm" class="space-y-8">
                     <?= csrf_field() ?>
-                    
-                    <!-- Debug info (remove this after fixing) -->
-                    <?php if (ENVIRONMENT === 'development'): ?>
-                        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
-                            <h4 class="font-medium text-yellow-800 mb-2">Debug Info:</h4>
-                            <p class="text-sm text-yellow-700">Current popular status: <?= $package['popular'] ?></p>
-                            <p class="text-sm text-yellow-700">Package ID: <?= $package['id'] ?></p>
-                        </div>
-                    <?php endif; ?>
 
                     <input type="hidden" name="_method" value="POST">
                     
@@ -289,7 +280,7 @@ Perbarui informasi paket internet
 
     <div class="lg:col-span-1">
         <!-- Preview Card -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 sticky top-8">
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 sticky top-24">
             <div class="p-6 border-b border-gray-200">
                 <div class="flex items-center">
                     <i class="fas fa-eye text-blue-600 text-xl mr-2"></i>
