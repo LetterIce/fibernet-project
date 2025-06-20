@@ -201,9 +201,8 @@ Dashboard Overview
                                 <div class="w-px h-12 bg-gray-200 mx-3"></div>
                                 <div class="text-center flex-1">
                                     <p class="text-sm text-gray-500 mb-1">Status</p>
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 shadow-sm">
-                                        <i class="fas fa-check-circle mr-1"></i>
-                                        <?= isset($user['status']) && $user['status'] == 'active' ? 'Aktif' : 'Aktif' ?>
+                                    <span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-800">
+                                        Aktif
                                     </span>
                                 </div>
                             </div>
@@ -321,22 +320,44 @@ Dashboard Overview
 <!-- Package Upgrade Modal -->
 <div id="upgradeModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
     <div class="flex items-center justify-center min-h-screen p-4">
-        <div class="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        <div class="bg-white rounded-xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-y-auto">
             <div class="p-6 border-b border-gray-200">
                 <div class="flex items-center justify-between">
-                    <h3 class="text-xl font-bold bg-gradient-to-r from-gray-900 to-blue-900 bg-clip-text text-transparent">
-                        Upgrade Paket Internet
-                    </h3>
-                    <button id="closeModal" class="text-gray-400 hover:text-gray-600 transition-colors">
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900">
+                            Pilih Paket yang Tepat untuk Anda
+                        </h3>
+                        <p class="text-gray-600 mt-1">Tingkatkan pengalaman internet Anda dengan paket yang lebih sesuai kebutuhan</p>
+                    </div>
+                    <button id="closeModal" class="text-gray-400 hover:text-gray-600 transition-colors p-2">
                         <i class="fas fa-times text-xl"></i>
                     </button>
                 </div>
-                <p class="text-gray-600 mt-2">Pilih paket yang sesuai dengan kebutuhan Anda</p>
+            </div>
+            
+            <!-- Current Package Info -->
+            <div id="currentPackageInfo" class="p-1 bg-gray-50 border-b border-gray-200">
+                <!-- Will be populated by JavaScript -->
             </div>
             
             <div class="p-6">
+                <h4 class="text-lg font-semibold text-gray-900 mb-4">Paket Internet Tersedia</h4>
                 <div id="packagesContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <!-- Packages will be loaded here -->
+                </div>
+                
+                <div class="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <div class="flex items-start space-x-3">
+                        <i class="fas fa-info-circle text-blue-500 mt-1"></i>
+                        <div class="text-sm text-blue-800">
+                            <p class="font-medium mb-1">Informasi Upgrade:</p>
+                            <ul class="list-disc list-inside space-y-1 text-blue-700">
+                                <li>Perubahan paket akan berlaku pada siklus tagihan berikutnya</li>
+                                <li>Tidak ada biaya administrasi untuk upgrade paket</li>
+                                <li>Anda dapat menghubungi customer service untuk bantuan</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -532,6 +553,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
+                    displayCurrentPackageInfo(data.current_package);
                     displayPackages(data.packages, data.current_package_id);
                 } else {
                     console.error('Error loading packages:', data.message);
@@ -544,38 +566,113 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
+    function displayCurrentPackageInfo(currentPackage) {
+        const currentPackageInfo = document.getElementById('currentPackageInfo');
+        if (currentPackage) {
+            const speedDisplay = currentPackage.speed >= 1000 ? `${currentPackage.speed/1000} Gbps` : `${currentPackage.speed} Mbps`;
+            const priceFormatted = new Intl.NumberFormat('id-ID').format(currentPackage.price);
+            
+            currentPackageInfo.innerHTML = `
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <div class="h-12 w-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-check text-white text-lg"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Paket Saat Ini</p>
+                            <h4 class="text-lg font-bold text-gray-900">${currentPackage.name}</h4>
+                            <p class="text-sm text-gray-600">${speedDisplay} • Rp ${priceFormatted}/bulan</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-800">
+                            Aktif
+                        </span>
+                    </div>
+                </div>
+            `;
+        }
+    }
+
     function displayPackages(packages, currentPackageId) {
         let html = '';
         
         packages.forEach(package => {
             const isPopular = package.popular == 1;
             const isCurrent = package.id == currentPackageId;
+            const isUpgrade = package.price > (<?= $current_package ? $current_package['price'] : 0 ?>);
             const speedDisplay = package.speed >= 1000 ? `${package.speed/1000} Gbps` : `${package.speed} Mbps`;
             const priceFormatted = new Intl.NumberFormat('id-ID').format(package.price);
             
+            // Define package features based on speed/price
+            let features = [];
+            if (package.speed >= 1000) {
+                features = ['Ultra High Speed', 'Perfect untuk Gaming', 'Streaming 4K/8K', '24/7 Priority Support', 'Free Installation'];
+            } else if (package.speed >= 250) {
+                features = ['High Speed Internet', 'Gaming & Streaming', 'Multiple Devices', '24/7 Support', 'Free Modem'];
+            } else if (package.speed >= 100) {
+                features = ['Fast Internet', 'HD Streaming', 'Work from Home', 'Customer Support', 'Easy Setup'];
+            } else {
+                features = ['Basic Internet', 'Social Media', 'Light Streaming', 'Email Support', 'Self Setup'];
+            }
+            
             html += `
-                <div class="relative bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-300 ${isPopular ? 'ring-2 ring-blue-500' : ''} ${isCurrent ? 'ring-2 ring-green-500' : ''}">
-                    ${isPopular ? '<div class="absolute -top-3 left-1/2 transform -translate-x-1/2"><span class="bg-blue-500 text-white px-3 py-1 rounded-full text-xs font-medium">POPULER</span></div>' : ''}
-                    ${isCurrent ? '<div class="absolute -top-3 right-4"><span class="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-medium">PAKET AKTIF</span></div>' : ''}
-                    
-                    <div class="text-center mb-6">
-                        <div class="h-16 w-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-${package.speed >= 1000 ? 'bolt' : package.speed >= 250 ? 'rocket' : package.speed >= 100 ? 'wifi' : 'signal'} text-white text-2xl"></i>
+                <div class="relative bg-white border-2 ${isPopular ? 'border-blue-500 shadow-lg' : isCurrent ? 'border-blue-400' : 'border-gray-200'} rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300 ${isPopular ? 'transform scale-105' : ''}">
+                    ${isPopular ? `
+                        <div class="absolute top-0 left-0 right-0 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-center py-2 text-sm font-medium">
+                            <i class="fas fa-star mr-1"></i>PALING POPULER
                         </div>
-                        <h4 class="text-lg font-bold text-gray-900 mb-2">${package.name}</h4>
-                        <div class="text-3xl font-bold text-blue-600 mb-1">${speedDisplay}</div>
-                        <div class="text-2xl font-bold text-gray-900">Rp ${priceFormatted}</div>
-                        <div class="text-sm text-gray-500">per bulan</div>
-                    </div>
+                    ` : ''}
                     
-                    <div class="mb-6">
-                        <p class="text-gray-600 text-sm text-center">${package.description}</p>
-                    </div>
+                    ${isCurrent ? `
+                        <div class="absolute top-2 right-2">
+                            <span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-800">
+                                Aktif
+                            </span>
+                        </div>
+                    ` : ''}
                     
-                    ${isCurrent ? 
-                        '<button class="w-full bg-gray-300 text-gray-500 py-3 px-4 rounded-lg font-medium cursor-not-allowed"><i class="fas fa-check mr-2"></i>Paket Saat Ini</button>' :
-                        `<button onclick="upgradeToPackage(${package.id}, '${package.name}')" class="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg"><i class="fas fa-arrow-up mr-2"></i>Upgrade ke Paket Ini</button>`
-                    }
+                    <div class="p-6 ${isPopular ? 'pt-12' : ''}">
+                        <div class="text-center mb-4">
+                            <div class="h-16 w-16 bg-gradient-to-br ${isPopular ? 'from-blue-500 to-blue-600' : isCurrent ? 'from-blue-500 to-blue-600' : 'from-gray-500 to-gray-600'} rounded-xl flex items-center justify-center mx-auto mb-3 shadow-lg">
+                                <i class="fas fa-${package.speed >= 1000 ? 'bolt' : package.speed >= 250 ? 'rocket' : package.speed >= 100 ? 'wifi' : 'signal'} text-white text-2xl"></i>
+                            </div>
+                            <h4 class="text-xl font-bold text-gray-900 mb-1">${package.name}</h4>
+                            <div class="text-3xl font-bold ${isPopular ? 'text-blue-600' : isCurrent ? 'text-blue-600' : 'text-gray-900'} mb-1">${speedDisplay}</div>
+                            <div class="text-sm text-gray-500 mb-3">Kecepatan hingga</div>
+                            
+                            <div class="border-t border-gray-200 pt-3">
+                                <div class="text-3xl font-bold text-gray-900">
+                                    Rp ${priceFormatted}
+                                    <span class="text-base font-normal text-gray-500">/bulan</span>
+                                </div>
+                                ${isUpgrade ? `<div class="text-sm text-green-600 mt-1"><i class="fas fa-arrow-up mr-1"></i>Upgrade dari paket saat ini</div>` : ''}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <div class="text-sm font-medium text-gray-900 mb-2">Yang Anda dapatkan:</div>
+                            <ul class="space-y-2">
+                                ${features.map(feature => `
+                                    <li class="flex items-center text-sm text-gray-600">
+                                        <i class="fas fa-check text-green-500 mr-2 text-xs"></i>
+                                        ${feature}
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                        
+                        ${isCurrent ? `
+                            <button class="w-full bg-gray-100 text-gray-500 py-3 px-4 rounded-lg font-medium cursor-not-allowed border border-gray-200">
+                                <i class="fas fa-check mr-2"></i>Paket Aktif Saat Ini
+                            </button>
+                        ` : `
+                            <button onclick="upgradeToPackage(${package.id}, '${package.name}', ${package.price})" class="w-full bg-gradient-to-r ${isPopular ? 'from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700' : 'from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700'} text-white py-3 px-4 rounded-lg font-medium transition-all duration-200 shadow-md hover:shadow-lg">
+                                <i class="fas fa-${isUpgrade ? 'arrow-up' : 'exchange-alt'} mr-2"></i>
+                                ${isUpgrade ? 'Upgrade ke Paket Ini' : 'Pilih Paket Ini'}
+                            </button>
+                        `}
+                    </div>
                 </div>
             `;
         });
@@ -583,15 +680,36 @@ document.addEventListener('DOMContentLoaded', function() {
         packagesContainer.innerHTML = html;
     }
 
-    window.upgradeToPackage = function(packageId, packageName) {
-        if (confirm(`Apakah Anda yakin ingin upgrade ke paket ${packageName}?`)) {
+    window.upgradeToPackage = function(packageId, packageName, packagePrice) {
+        const currentPrice = <?= $current_package ? $current_package['price'] : 0 ?>;
+        const priceFormatted = new Intl.NumberFormat('id-ID').format(packagePrice);
+        const currentPriceFormatted = new Intl.NumberFormat('id-ID').format(currentPrice);
+        
+        let confirmMessage = `Konfirmasi Perubahan Paket\n\n`;
+        confirmMessage += `Paket Baru: ${packageName}\n`;
+        confirmMessage += `Biaya: Rp ${priceFormatted}/bulan\n\n`;
+        
+        if (packagePrice > currentPrice) {
+            const difference = packagePrice - currentPrice;
+            const differenceFormatted = new Intl.NumberFormat('id-ID').format(difference);
+            confirmMessage += `Selisih biaya: +Rp ${differenceFormatted}/bulan\n`;
+        } else if (packagePrice < currentPrice) {
+            const difference = currentPrice - packagePrice;
+            const differenceFormatted = new Intl.NumberFormat('id-ID').format(difference);
+            confirmMessage += `Penghematan: -Rp ${differenceFormatted}/bulan\n`;
+        }
+        
+        confirmMessage += `\nPerubahan akan berlaku pada siklus tagihan berikutnya.\n\n`;
+        confirmMessage += `Apakah Anda yakin ingin melanjutkan?`;
+        
+        if (confirm(confirmMessage)) {
             const formData = new FormData();
             formData.append('package_id', packageId);
             
             // Show loading state
             const button = event.target;
             const originalText = button.innerHTML;
-            button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Memproses...';
+            button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Memproses perubahan...';
             button.disabled = true;
             
             fetch('<?= base_url('packages/upgrade') ?>', {
@@ -605,20 +723,20 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    alert(data.message);
+                    alert(`Berhasil! ${data.message}\n\nPerubahan paket akan aktif pada siklus tagihan berikutnya.`);
                     modal.classList.add('hidden');
                     setTimeout(() => {
                         window.location.reload();
-                    }, 1000);
+                    }, 1500);
                 } else {
-                    alert(data.message || 'Terjadi kesalahan');
+                    alert(`Gagal: ${data.message || 'Terjadi kesalahan'}`);
                     button.innerHTML = originalText;
                     button.disabled = false;
                 }
             })
             .catch(error => {
                 console.error('Error upgrading package:', error);
-                alert('Terjadi kesalahan saat upgrade paket');
+                alert('Terjadi kesalahan saat memproses perubahan paket. Silakan coba lagi atau hubungi customer service.');
                 button.innerHTML = originalText;
                 button.disabled = false;
             });
