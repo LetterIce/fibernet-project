@@ -111,15 +111,16 @@ Paket Internet
                 <div id="packagesContainer" class="overflow-hidden py-2 px-2">
                     <div id="packagesScroll" class="flex gap-8 transition-transform duration-500 ease-in-out">
                         <?php foreach ($packages as $index => $pkg): ?>
-                        <div class="flex-shrink-0 w-full max-w-sm bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow duration-300 <?= $index === 1 ? 'ring-2 ring-primary' : '' ?> <?= $index === 1 ? 'my-1' : '' ?>">
-                            <?php if ($index === 1): ?>
+                        <?php $isPopular = ($pkg['popular'] == 1 || $pkg['popular'] === true || $pkg['popular'] === 'true'); ?>
+                        <div class="flex-shrink-0 w-full max-w-sm bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow duration-300 <?= $isPopular ? 'ring-2 ring-primary' : '' ?> <?= $isPopular ? 'my-1' : '' ?> flex flex-col" style="height: 600px;">
+                            <?php if ($isPopular): ?>
                             <div class="bg-primary text-white text-center py-2 text-sm font-medium">
                                 <span data-lang="id">PALING POPULER</span>
                                 <span data-lang="en" style="display: none;">MOST POPULAR</span>
                             </div>
                             <?php endif; ?>
                             
-                            <div class="p-8">
+                            <div class="p-8 flex flex-col h-full">
                                 <div class="text-center mb-6">
                                     <h3 class="text-xl font-bold text-gray-900 mb-3"><?= esc($pkg['name']) ?></h3>
                                     <div class="mb-4">
@@ -139,7 +140,7 @@ Paket Internet
                                     </div>
                                 </div>
                                 
-                                <ul class="space-y-3 mb-8">
+                                <ul class="space-y-3 mb-8 flex-1">
                                     <li class="flex items-center text-sm">
                                         <i class="fas fa-check text-green-500 mr-3 text-xs"></i>
                                         <span class="text-gray-700">
@@ -188,10 +189,12 @@ Paket Internet
                                     <?php endif; ?>
                                 </ul>
                                 
-                                <button class="w-full bg-primary text-white py-3 rounded-lg font-medium hover:bg-accent transition-colors package-select-btn" data-package-id="<?= $pkg['id'] ?>">
-                                    <span data-lang="id">Pilih Paket Ini</span>
-                                    <span data-lang="en" style="display: none;">Choose This Package</span>
-                                </button>
+                                <div class="mt-auto">
+                                    <button class="w-full bg-primary text-white py-3 rounded-lg font-medium hover:bg-accent transition-colors package-select-btn" data-package-id="<?= $pkg['id'] ?>">
+                                        <span data-lang="id">Pilih Paket Ini</span>
+                                        <span data-lang="en" style="display: none;">Choose This Package</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <?php endforeach; ?>
@@ -207,15 +210,16 @@ Paket Internet
             <!-- Grid Layout for 3 or fewer packages -->
             <div class="grid grid-cols-1 md:grid-cols-<?= count($packages) <= 2 ? count($packages) : '3' ?> gap-12 justify-center">
                 <?php foreach ($packages as $index => $pkg): ?>
-                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow duration-300 <?= $index === 1 ? 'ring-2 ring-primary' : '' ?>">
-                    <?php if ($index === 1): ?>
+                <?php $isPopular = ($pkg['popular'] === true || $pkg['popular'] === 'true'); ?>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow duration-300 <?= $isPopular ? 'ring-2 ring-primary' : '' ?> flex flex-col" style="height: 600px;">
+                    <?php if ($isPopular): ?>
                     <div class="bg-primary text-white text-center py-2 text-sm font-medium">
                         <span data-lang="id">PALING POPULER</span>
                         <span data-lang="en" style="display: none;">MOST POPULAR</span>
                     </div>
                     <?php endif; ?>
                     
-                    <div class="p-8">
+                    <div class="p-8 flex flex-col h-full">
                         <div class="text-center mb-6">
                             <h3 class="text-xl font-bold text-gray-900 mb-3"><?= esc($pkg['name']) ?></h3>
                             <div class="mb-4">
@@ -235,7 +239,7 @@ Paket Internet
                             </div>
                         </div>
                         
-                        <ul class="space-y-3 mb-8">
+                        <ul class="space-y-3 mb-8 flex-1">
                             <li class="flex items-center text-sm">
                                 <i class="fas fa-check text-green-500 mr-3 text-xs"></i>
                                 <span class="text-gray-700">
@@ -284,10 +288,12 @@ Paket Internet
                             <?php endif; ?>
                         </ul>
                         
-                        <button class="w-full bg-primary text-white py-3 rounded-lg font-medium hover:bg-accent transition-colors package-select-btn" data-package-id="<?= $pkg['id'] ?>">
-                            <span data-lang="id">Pilih Paket Ini</span>
-                            <span data-lang="en" style="display: none;">Choose This Package</span>
-                        </button>
+                        <div class="mt-auto">
+                            <button class="w-full bg-primary text-white py-3 rounded-lg font-medium hover:bg-accent transition-colors package-select-btn" data-package-id="<?= $pkg['id'] ?>">
+                                <span data-lang="id">Pilih Paket Ini</span>
+                                <span data-lang="en" style="display: none;">Choose This Package</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <?php endforeach; ?>
@@ -674,7 +680,7 @@ document.addEventListener('DOMContentLoaded', function() {
         //             goToSlide(0);
         //         } else {
         //             goToSlide(currentIndex + 1);
-        //         }
+        //     }
         //     }, 5000);
         // });
 
