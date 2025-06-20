@@ -57,6 +57,14 @@ class ActivityModel extends Model
                     ->findAll();
     }
 
+    public function getActivitiesByUserId($userId, $limit = 10)
+    {
+        return $this->where('user_id', $userId)
+                    ->orderBy('created_at', 'DESC')
+                    ->limit($limit)
+                    ->findAll();
+    }
+
     public function getRecentActivities($limit = 50)
     {
         return $this->select('activities.*, users.name as user_name')

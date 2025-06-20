@@ -28,11 +28,11 @@ Dashboard Overview
                 <div class="flex-1">
                     <p class="text-sm font-medium text-gray-600 mb-1">Penggunaan Bulan Ini</p>
                     <p class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent mb-1">
-                        <?= number_format($current_usage ?: 456.7, 1) ?> GB
+                        <?= number_format($current_usage ?: 0, 1) ?> GB
                     </p>
                     <p class="text-sm text-green-600 flex items-center">
                         <i class="fas fa-arrow-up mr-1 text-xs"></i>
-                        <span><?= $usage_percentage > 0 ? '+' : '' ?><?= abs($usage_percentage) ?: 12 ?>% dari bulan lalu</span>
+                        <span><?= $usage_percentage > 0 ? '+' : '' ?><?= abs($usage_percentage) ?: 0 ?>% dari bulan lalu</span>
                     </p>
                 </div>
                 <div class="h-12 w-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg flex items-center justify-center flex-shrink-0 ml-4 shadow-sm">
@@ -48,7 +48,7 @@ Dashboard Overview
                 <div class="flex-1">
                     <p class="text-sm font-medium text-gray-600 mb-1">Kecepatan Terakhir</p>
                     <p class="text-2xl font-bold bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent mb-1">
-                        <?= $latest_speed ? number_format($latest_speed['download_speed'], 1) : '98.5' ?> Mbps
+                        <?= $latest_speed ? number_format($latest_speed['download_speed'], 1) : '0' ?> Mbps
                     </p>
                     <p class="text-sm text-green-600 flex items-center">
                         <i class="fas fa-check-circle mr-1 text-xs"></i>
