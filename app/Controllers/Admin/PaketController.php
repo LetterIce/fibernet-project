@@ -143,11 +143,18 @@ class PaketController extends BaseController
         $package = $this->packageModel->find($id);
         
         if (!$package) {
-            throw new \CodeIgniter\Exceptions\PageNotFoundException('Package not found');
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Paket tidak ditemukan');
         }
 
+        // Get package statistics
+        $statistics = $this->packageModel->getPackageStatistics($id);
+
         $data = [
-            'package' => $package
+            'title' => 'Detail Paket - ' . $package['name'],
+            'package' => $package,
+            'total_pelanggan' => $statistics['total_subscribers'],
+            'pelanggan_aktif' => $statistics['total_subscribers'], // All subscribers are considered active
+            'monthly_revenue' => $statistics['monthly_revenue']
         ];
 
         return view('admin/paket/view', $data);

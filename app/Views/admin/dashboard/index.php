@@ -73,22 +73,26 @@ Dashboard
 </div>
 
 <!-- Charts Row -->
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-    <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200">
+<div class="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-8">
+    <div class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-gray-200">
         <div class="p-6 border-b border-gray-200">
             <h3 class="text-lg font-semibold text-gray-900">Statistik Pendaftaran Pelanggan</h3>
         </div>
         <div class="p-6">
-            <canvas id="userRegistrationChart" height="120"></canvas>
+            <div class="h-72">
+                <canvas id="userRegistrationChart"></canvas>
+            </div>
         </div>
     </div>
 
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+    <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200">
         <div class="p-6 border-b border-gray-200">
             <h3 class="text-lg font-semibold text-gray-900">Paket Terpopuler</h3>
         </div>
         <div class="p-6">
-            <canvas id="packagePopularityChart"></canvas>
+            <div class="h-72 flex items-center justify-center">
+                <canvas id="packagePopularityChart"></canvas>
+            </div>
         </div>
     </div>
 </div>
@@ -253,7 +257,7 @@ if (typeof Chart === 'undefined') {
                     data: packagePopularityData.data || [1],
                     backgroundColor: packagePopularityData.colors || ['#9ca3af'],
                     borderWidth: 0,
-                    cutout: '60%'
+                    cutout: '65%'
                 }]
             },
             options: {
@@ -265,7 +269,11 @@ if (typeof Chart === 'undefined') {
                         labels: {
                             padding: 20,
                             usePointStyle: true,
-                            color: '#6b7280'
+                            color: '#6b7280',
+                            font: {
+                                size: 14
+                            },
+                            boxWidth: 15
                         }
                     }
                 }

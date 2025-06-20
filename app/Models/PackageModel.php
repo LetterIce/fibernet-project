@@ -18,12 +18,13 @@ class PackageModel extends Model
         'price',
         'description',
         'popular',
+        'features',
         'created_at',
         'updated_at'
     ];
 
     // Dates
-    protected $useTimestamps = false; // We'll handle timestamps manually
+    protected $useTimestamps = true;
     protected $dateFormat    = 'datetime';
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
@@ -126,5 +127,33 @@ class PackageModel extends Model
         }
         
         return $builder->get()->getResultArray();
+    }
+
+    public function getPackageStatistics($packageId)
+    {
+        $db = \Config\Database::connect();
+        
+        // Get total subscribers for this package (excluding admin role)
+        $totalSubscribers = $db->table('users')
+            ->where('subscribe_plan_id', $packageId)
+            ->where('role !=', 'admin')
+            ->countAllResults();
+        
+        // Get monthly revenue from bills for users subscribed to this package
+        $monthlyRevenue = $db->table('bills b')
+            ->join('users u', 'b.user_id = u.id')
+            ->where('u.subscribe_plan_id', $packageId)
+            ->where('u.role !=', 'admin')
+            ->where('b.month', date('n')) // Current month
+            ->where('b.year', date('Y'))  // Current year
+            ->selectSum('b.amount', 'total_revenue')
+            ->get()
+            ->getRow()
+            ->total_revenue ?? 0;
+        
+        return [
+            'total_subscribers' => $totalSubscribers,
+            'monthly_revenue' => $monthlyRevenue
+        ];
     }
 }
