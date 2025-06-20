@@ -16,6 +16,9 @@ class DatabaseSeeder extends Seeder
         // Run Package Seeder
         $this->call('PackageSeeder');
         
+        // Run Admin Activities Seeder
+        $this->call('AdminActivitiesSeeder');
+        
         echo "\n🎉 Database seeding completed successfully!\n";
     }
 }

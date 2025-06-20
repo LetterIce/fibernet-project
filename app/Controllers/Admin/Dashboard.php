@@ -3,6 +3,7 @@
 use App\Controllers\BaseController;
 use App\Models\UserModel;
 use App\Models\PackageModel;
+use App\Models\ActivityModel;
 
 class Dashboard extends BaseController
 {
@@ -10,6 +11,7 @@ class Dashboard extends BaseController
     {
         $userModel = new UserModel();
         $paketModel = new PackageModel();
+        $activityModel = new ActivityModel();
         
         // Get customer registration statistics by month
         $registrationStats = $this->getRegistrationStatistics($userModel);
@@ -20,14 +22,24 @@ class Dashboard extends BaseController
         // Get package popularity data
         $packagePopularityData = $this->getPackagePopularityData($paketModel);
         
+        // Get current user ID from session
+        $currentUserId = (int)(session()->get('user_id') ?? 1);
+        
+        // Get recent activities for current user using the ActivityModel
+        $recentActivities = $activityModel->getActivitiesByUserId($currentUserId, 8);
+        
         $data = [
             'total_users' => $userModel->where('role', 'user')->countAllResults(),
             'total_packages' => $paketModel->countAll(),
-            'latest_users' => $userModel->orderBy('created_at', 'DESC')->limit(5)->findAll(),
+            'latest_users' => $userModel->orderBy('created_at', 'DESC')->limit((int)6)->findAll(),
             'user_registration_data' => $userRegistrationData,
-            'package_popularity_data' => $packagePopularityData
+            'package_popularity_data' => $packagePopularityData,
+            'latest_activities' => $recentActivities,
+            'recent_activities' => $recentActivities, // Add this for the view
+            'debug_user_id' => $currentUserId
         ];
         
+        // Use the correct view path that matches your existing view file
         return view('admin/dashboard/index', $data);
     }
     

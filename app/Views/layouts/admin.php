@@ -77,7 +77,7 @@
                         <i class="fas fa-box mr-3 text-lg"></i>
                         Paket Internet
                     </a>
-                    <a href="/admin/users" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200">
+                    <!-- <a href="/admin/users" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200">
                         <i class="fas fa-users mr-3 text-lg"></i>
                         Pelanggan
                     </a>
@@ -88,7 +88,7 @@
                     <a href="/admin/reports" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200">
                         <i class="fas fa-chart-bar mr-3 text-lg"></i>
                         Laporan
-                    </a>
+                    </a> -->
                 </nav>
                 
                 <div class="mt-8 pt-6 border-t border-gray-200 px-4">

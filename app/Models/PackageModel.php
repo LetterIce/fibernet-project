@@ -139,13 +139,17 @@ class PackageModel extends Model
             ->where('role !=', 'admin')
             ->countAllResults();
         
-        // Get monthly revenue from bills for users subscribed to this package
+        // Get monthly revenue from bills for users subscribed to this package - ONLY count paid invoices
+        $currentMonth = date('m');
+        $currentYear = date('Y');
+        
         $monthlyRevenue = $db->table('bills b')
             ->join('users u', 'b.user_id = u.id')
             ->where('u.subscribe_plan_id', $packageId)
             ->where('u.role !=', 'admin')
-            ->where('b.month', date('n')) // Current month
-            ->where('b.year', date('Y'))  // Current year
+            ->where('b.month', $currentMonth) // Current month
+            ->where('b.year', $currentYear)  // Current year
+            ->where('b.status', 'paid')      // Only count paid invoices
             ->selectSum('b.amount', 'total_revenue')
             ->get()
             ->getRow()

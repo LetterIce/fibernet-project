@@ -150,32 +150,44 @@ Dashboard
         </div>
         <div class="p-6">
             <div class="space-y-6">
-                <div class="flex items-start space-x-3">
-                    <div class="w-3 h-3 bg-green-400 rounded-full mt-2 flex-shrink-0"></div>
-                    <div class="flex-1">
-                        <p class="text-sm font-medium text-gray-900">Pelanggan baru mendaftar</p>
-                        <p class="text-sm text-gray-600">andi mendaftar paket Premium</p>
-                        <p class="text-xs text-gray-500 mt-1">2 menit yang lalu</p>
+                <?php if (!empty($latest_activities) && is_array($latest_activities)): ?>
+                    <?php foreach ($latest_activities as $activity): ?>
+                    <div class="flex items-start space-x-3">
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 <?php 
+                            switch($activity['activity_type']) {
+                                case 'registration': echo 'bg-green-100'; break;
+                                case 'package': echo 'bg-blue-100'; break;
+                                case 'payment': echo 'bg-yellow-100'; break;
+                                case 'system': echo 'bg-gray-100'; break;
+                                case 'maintenance': echo 'bg-orange-100'; break;
+                                default: echo 'bg-gray-100';
+                            }
+                        ?>">
+                            <i class="fas fa-<?= esc($activity['icon']) ?> text-<?php 
+                                switch($activity['activity_type']) {
+                                    case 'registration': echo 'green'; break;
+                                    case 'package': echo 'blue'; break;
+                                    case 'payment': echo 'yellow'; break;
+                                    case 'system': echo 'gray'; break;
+                                    case 'maintenance': echo 'orange'; break;
+                                    default: echo 'gray';
+                                }
+                            ?>-600"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium text-gray-900 capitalize"><?= esc(str_replace('_', ' ', $activity['activity_type'])) ?></p>
+                            <p class="text-sm text-gray-600 break-words"><?= esc($activity['description']) ?></p>
+                            <p class="text-xs text-gray-500 mt-1"><?= date('d M Y H:i', strtotime($activity['created_at'])) ?></p>
+                        </div>
                     </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                <div class="text-center text-gray-500 py-8">
+                    <i class="fas fa-info-circle text-4xl mb-4 text-gray-400"></i>
+                    <p class="text-lg font-medium">Belum ada aktivitas terkini</p>
+                    <p class="text-sm mt-1">Aktivitas akan muncul di sini ketika ada yang terjadi</p>
                 </div>
-                
-                <div class="flex items-start space-x-3">
-                    <div class="w-3 h-3 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
-                    <div class="flex-1">
-                        <p class="text-sm font-medium text-gray-900">Paket baru ditambahkan</p>
-                        <p class="text-sm text-gray-600">Paket Ultra Speed 100Mbps</p>
-                        <p class="text-xs text-gray-500 mt-1">1 jam yang lalu</p>
-                    </div>
-                </div>
-                
-                <div class="flex items-start space-x-3">
-                    <div class="w-3 h-3 bg-amber-400 rounded-full mt-2 flex-shrink-0"></div>
-                    <div class="flex-1">
-                        <p class="text-sm font-medium text-gray-900">Pembayaran diterima</p>
-                        <p class="text-sm text-gray-600">Rp 365.000 dari pelanggan andi</p>
-                        <p class="text-xs text-gray-500 mt-1">3 jam yang lalu</p>
-                    </div>
-                </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
