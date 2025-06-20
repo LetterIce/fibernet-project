@@ -25,8 +25,12 @@ class Dashboard extends BaseController
 
     public function index()
     {
-        $userId = session()->get('user_id') ?? 2; // Default to user 2 for testing
+        $userId = session()->get('user_id');
         
+        if (!$userId) {
+            return redirect()->to('/login');
+        }
+
         // Get current month usage
         $currentUsage = $this->usageModel->getCurrentMonthUsage($userId);
         $previousUsage = $this->usageModel->getPreviousMonthUsage($userId);
@@ -47,8 +51,11 @@ class Dashboard extends BaseController
         // Get connection status
         $connectionStatus = $this->dashboardModel->getConnectionStatus($userId);
         
-        // Get recent activities
-        $recentActivities = $this->activityModel->getRecentActivities($userId, 5);
+        // Get recent activities for current user only
+        $recentActivities = $this->activityModel->where('user_id', $userId)
+                                                ->orderBy('created_at', 'DESC')
+                                                ->limit(10)
+                                                ->findAll();
         
         $data = [
             'title' => 'Dashboard',

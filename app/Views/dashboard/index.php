@@ -175,46 +175,6 @@ Dashboard Overview
                         </div>
                     </div>
                 <?php endforeach; ?>
-            <?php else: ?>
-                <div class="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                    <div class="h-8 w-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                        <i class="fas fa-check text-green-600 text-sm"></i>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <p class="text-sm font-medium text-gray-900">Pembayaran berhasil diproses</p>
-                        <p class="text-xs text-gray-500 mt-1">2 jam yang lalu</p>
-                    </div>
-                </div>
-                
-                <div class="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                    <div class="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                        <i class="fas fa-download text-primary text-sm"></i>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <p class="text-sm font-medium text-gray-900">Penggunaan data mencapai 50%</p>
-                        <p class="text-xs text-gray-500 mt-1">1 hari yang lalu</p>
-                    </div>
-                </div>
-                
-                <div class="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                    <div class="h-8 w-8 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
-                        <i class="fas fa-wrench text-orange-600 text-sm"></i>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <p class="text-sm font-medium text-gray-900">Maintenance dijadwalkan</p>
-                        <p class="text-xs text-gray-500 mt-1">3 hari yang lalu</p>
-                    </div>
-                </div>
-                
-                <div class="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                    <div class="h-8 w-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
-                        <i class="fas fa-gift text-purple-600 text-sm"></i>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <p class="text-sm font-medium text-gray-900">Promo upgrade tersedia</p>
-                        <p class="text-xs text-gray-500 mt-1">1 minggu yang lalu</p>
-                    </div>
-                </div>
             <?php endif; ?>
         </div>
         

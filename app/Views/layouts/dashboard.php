@@ -60,7 +60,7 @@
                         <i class="fas fa-tachometer-alt w-5 text-center mr-3"></i>
                         <span>Dashboard</span>
                     </a>
-                    <a href="/dashboard/usage" class="flex items-center px-4 py-3 text-gray-300 hover:bg-sidebarHover hover:text-white rounded-lg transition-colors duration-200 group">
+                    <!-- <a href="/dashboard/usage" class="flex items-center px-4 py-3 text-gray-300 hover:bg-sidebarHover hover:text-white rounded-lg transition-colors duration-200 group">
                         <i class="fas fa-chart-line w-5 text-center mr-3"></i>
                         <span>Penggunaan Data</span>
                     </a>
@@ -75,7 +75,7 @@
                     <a href="/dashboard/support" class="flex items-center px-4 py-3 text-gray-300 hover:bg-sidebarHover hover:text-white rounded-lg transition-colors duration-200 group">
                         <i class="fas fa-headset w-5 text-center mr-3"></i>
                         <span>Dukungan</span>
-                    </a>
+                    </a> -->
                     <a href="/dashboard/profile" class="flex items-center px-4 py-3 text-gray-300 hover:bg-sidebarHover hover:text-white rounded-lg transition-colors duration-200 group">
                         <i class="fas fa-user w-5 text-center mr-3"></i>
                         <span>Profil Saya</span>
