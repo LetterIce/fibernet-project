@@ -85,7 +85,7 @@ Kelola paket internet yang tersedia untuk pelanggan
             </div>
             <div class="ml-4">
                 <p class="text-sm text-gray-600">Total Pelanggan</p>
-                <p class="text-2xl font-bold text-gray-900">0</p>
+                <p class="text-2xl font-bold text-gray-900"><?= $total_users ?? 0 ?></p>
             </div>
         </div>
     </div>

@@ -2,21 +2,28 @@
 
 use App\Controllers\BaseController;
 use App\Models\PackageModel;
+use App\Models\UserModel;
 
 class PaketController extends BaseController
 {
     protected $packageModel;
+    protected $userModel;
 
     public function __construct()
     {
         $this->packageModel = new PackageModel();
+        $this->userModel = new UserModel();
     }
 
     // READ
     public function index()
     {
+        $packages = $this->packageModel->findAll();
+        $userModel = new UserModel();
+
         $data = [
-            'packages' => $this->packageModel->findAll()
+            'packages' => $packages,
+            'total_users' => $userModel->where('role', 'user')->countAllResults()
         ];
         return view('admin/paket/index', $data); 
     }
