@@ -390,7 +390,7 @@ Paket Internet
                         <i class="fas fa-wifi text-primary text-3xl"></i>
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-4">
-                        <span data-lang="id">Jaringan Premium</span>
+                        <span data-lang="id">Jaringan Fiber to the home</span>
                         <span data-lang="en" style="display: none;">Premium Network</span>
                     </h3>
                     <p class="text-gray-600 mb-6">
@@ -426,21 +426,17 @@ Paket Internet
 <div class="bg-primary py-24">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2 class="text-3xl font-bold text-white mb-6">
-            <span data-lang="id">Siap untuk Memulai?</span>
-            <span data-lang="en" style="display: none;">Ready to Get Started?</span>
+            <span data-lang="id">Siap untuk internetan tanpa batas?</span>
+            <span data-lang="en" style="display: none;">Ready for unlimited internet?</span>
         </h2>
         <p class="text-xl text-blue-100 mb-12 max-w-2xl mx-auto">
-            <span data-lang="id">Cek ketersediaan internet fiber di area Anda dan nikmati akses internet fiber berkecepatan tinggi.</span>
+            <span data-lang="id">Cek ketersediaan internet fiber di area Anda dan nikmati akses internet fiber berkecepatan tinggi sekarang!</span>
             <span data-lang="en" style="display: none;">Check fiber internet availability in your area and join thousands of satisfied customers.</span>
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="/cek-area" class="bg-white text-primary px-8 py-3 rounded-lg font-medium hover:bg-gray-50 transition-colors">
                 <span data-lang="id">Cek Area Coverage</span>
                 <span data-lang="en" style="display: none;">Check Area Coverage</span>
-            </a>
-            <a href="tel:0800-1234-5678" class="border-2 border-white text-white px-8 py-3 rounded-lg font-medium hover:bg-white hover:text-primary transition-colors">
-                <span data-lang="id">Hubungi: 0800-1234-5678</span>
-                <span data-lang="en" style="display: none;">Call: 0800-1234-5678</span>
             </a>
         </div>
     </div>
