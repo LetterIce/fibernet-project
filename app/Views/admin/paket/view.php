@@ -241,10 +241,49 @@
     </div>
 </div>
 
+<!-- Hidden Delete Form -->
+<form id="deleteForm" method="post" style="display: none;">
+    <?= csrf_field() ?>
+    <input type="hidden" name="_method" value="DELETE">
+</form>
+
 <script>
 function confirmDelete(id) {
-    if(confirm('Apakah Anda yakin ingin menghapus paket ini?\n\nTindakan ini tidak dapat dibatalkan!')) {
-        window.location.href = '<?= base_url('admin/paket/delete/') ?>' + id;
+    if(confirm('Apakah Anda yakin ingin menghapus paket ini?\n\nTindakan ini tidak dapat dibatalkan dan akan mempengaruhi pelanggan yang menggunakan paket ini!')) {
+        // Show loading state
+        const deleteBtn = event.target;
+        const originalText = deleteBtn.innerHTML;
+        deleteBtn.innerHTML = '<svg class="w-4 h-4 mr-2 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>Menghapus...';
+        deleteBtn.disabled = true;
+        
+        // Use fetch to send DELETE request
+        fetch('<?= base_url('admin/paket/delete/') ?>' + id, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': document.querySelector('input[name="<?= csrf_token() ?>"]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Redirect to package list with success message
+                window.location.href = '<?= base_url('admin/paket') ?>?success=' + encodeURIComponent(data.message);
+            } else {
+                alert('Gagal menghapus paket: ' + data.message);
+                // Reset button state
+                deleteBtn.innerHTML = originalText;
+                deleteBtn.disabled = false;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat menghapus paket');
+            // Reset button state
+            deleteBtn.innerHTML = originalText;
+            deleteBtn.disabled = false;
+        });
     }
 }
 </script>

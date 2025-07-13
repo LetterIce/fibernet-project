@@ -77,11 +77,11 @@
                         <i class="fas fa-box mr-3 text-lg"></i>
                         Paket Internet
                     </a>
-                    <!-- <a href="/admin/users" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200">
+                    <a href="/admin/users" class="<?= strpos(uri_string(), 'admin/users') !== false ? 'bg-blue-50 text-blue-700 border-r-4 border-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' ?> group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200">
                         <i class="fas fa-users mr-3 text-lg"></i>
                         Pelanggan
                     </a>
-                    <a href="/admin/orders" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200">
+                    <!-- <a href="/admin/orders" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200">
                         <i class="fas fa-shopping-cart mr-3 text-lg"></i>
                         Pesanan
                     </a>
@@ -92,6 +92,10 @@
                 </nav>
                 
                 <div class="mt-8 pt-6 border-t border-gray-200 px-4">
+                    <a href="/" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 mb-2">
+                        <i class="fas fa-home mr-3 text-lg"></i>
+                        Kembali ke Website
+                    </a>
                     <a href="/logout" class="text-gray-600 hover:bg-red-50 hover:text-red-600 group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200">
                         <i class="fas fa-sign-out-alt mr-3 text-lg"></i>
                         Logout

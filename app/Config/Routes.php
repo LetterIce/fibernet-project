@@ -38,6 +38,9 @@ $routes->group('', ['filter' => 'auth'], function($routes) {
 $routes->group('admin', ['filter' => 'auth:admin', 'namespace' => 'App\Controllers\Admin'], function($routes) {
     $routes->get('/', 'Dashboard::index');
     
+    // Admin Dashboard specific routes
+    $routes->post('dashboard/update-user-package/(:num)', 'Dashboard::updateUserPackage/$1');
+    
     // CRUD Routes for Packages
     $routes->get('paket', 'PaketController::index');
     $routes->get('paket/new', 'PaketController::new');
@@ -49,4 +52,16 @@ $routes->group('admin', ['filter' => 'auth:admin', 'namespace' => 'App\Controlle
     $routes->post('paket/toggle-status/(:num)', 'admin\PaketController::toggleStatus/$1');
     $routes->post('paket/toggle-popular/(:num)', 'PaketController::togglePopular/$1');
     $routes->get('paket/export', 'PaketController::export');
+    
+    // User Management Routes
+    $routes->get('users', 'UserController::index');
+    $routes->get('users/view/(:num)', 'UserController::view/$1');
+    $routes->post('users/delete/(:num)', 'UserController::delete/$1');
+    $routes->delete('users/delete/(:num)', 'UserController::delete/$1'); // Add DELETE method as fallback
+    $routes->post('users/update-package/(:num)', 'UserController::updatePackage/$1');
+    $routes->put('users/update-package/(:num)', 'UserController::updatePackage/$1'); // Add PUT method as fallback
+    $routes->get('users/change-package/(:num)', 'UserController::changePackage/$1');
+    $routes->post('users/bulk-update-package', 'UserController::bulkUpdatePackage');
+    $routes->get('users/export', 'UserController::export');
+    $routes->post('users/export-selected', 'UserController::exportSelected');
 });

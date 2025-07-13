@@ -31,16 +31,63 @@ class Dashboard extends BaseController
         $data = [
             'total_users' => $userModel->where('role', 'user')->countAllResults(),
             'total_packages' => $paketModel->countAll(),
-            'latest_users' => $userModel->orderBy('created_at', 'DESC')->limit((int)6)->findAll(),
+            'active_users' => $userModel->where('role', 'user')->countAllResults(),
+            'subscribers' => $userModel->where('subscribe_plan_id IS NOT NULL')->countAllResults(),
+            'new_users_this_month' => $userModel->where('DATE_FORMAT(created_at, "%Y-%m") = DATE_FORMAT(NOW(), "%Y-%m")')->countAllResults(),
+            'latest_users' => $userModel->orderBy('created_at', 'DESC')->limit(6)->findAll(),
+            'recent_users' => $userModel->select('users.*, packages.name as package_name')
+                                      ->join('packages', 'packages.id = users.subscribe_plan_id', 'left')
+                                      ->orderBy('users.created_at', 'DESC')
+                                      ->limit(5)
+                                      ->findAll(),
             'user_registration_data' => $userRegistrationData,
             'package_popularity_data' => $packagePopularityData,
             'latest_activities' => $recentActivities,
-            'recent_activities' => $recentActivities, // Add this for the view
+            'recent_activities' => $recentActivities,
+            'total_orders' => 0, // Placeholder for future orders functionality
+            'total_revenue' => 0, // Placeholder for future revenue functionality
             'debug_user_id' => $currentUserId
         ];
         
-        // Use the correct view path that matches your existing view file
         return view('admin/dashboard/index', $data);
+    }
+    
+    public function updateUserPackage($userId)
+    {
+        $userModel = new UserModel();
+        $packageModel = new PackageModel();
+        
+        $packageId = $this->request->getPost('package_id');
+        
+        $user = $userModel->find($userId);
+        if (!$user) {
+            return $this->response->setJSON(['success' => false, 'message' => 'User tidak ditemukan']);
+        }
+
+        // Validate package exists if not empty
+        $package = null;
+        if (!empty($packageId)) {
+            $package = $packageModel->find($packageId);
+            if (!$package) {
+                return $this->response->setJSON(['success' => false, 'message' => 'Paket tidak ditemukan']);
+            }
+        }
+
+        // Update user's package
+        $updateData = [
+            'subscribe_plan_id' => empty($packageId) ? null : $packageId,
+            'updated_at' => date('Y-m-d H:i:s')
+        ];
+        
+        if ($userModel->update($userId, $updateData)) {
+            $packageName = empty($packageId) ? 'dihapus' : $package['name'];
+            return $this->response->setJSON([
+                'success' => true, 
+                'message' => "Paket berhasil diperbarui ke: {$packageName}"
+            ]);
+        } else {
+            return $this->response->setJSON(['success' => false, 'message' => 'Gagal memperbarui paket']);
+        }
     }
     
     private function getRegistrationStatistics($userModel)

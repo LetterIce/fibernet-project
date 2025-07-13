@@ -66,10 +66,6 @@
                         <i class="fas fa-tachometer-alt w-5 text-center mr-3 <?= $isDashboard ? 'text-primary' : 'text-gray-500 group-hover:text-primary' ?>"></i>
                         <span>Dashboard</span>
                     </a>
-                    <a href="/dashboard/profile" class="flex items-center px-4 py-3 <?= $isProfile ? 'bg-secondary text-primary border-r-2 border-primary' : 'text-gray-700 hover:bg-secondary hover:text-primary' ?> rounded-lg transition-colors duration-200 group">
-                        <i class="fas fa-user w-5 text-center mr-3 <?= $isProfile ? 'text-primary' : 'text-gray-500 group-hover:text-primary' ?>"></i>
-                        <span>Profil Saya</span>
-                    </a>
                 </div>
                 
                 <!-- Bottom Links -->

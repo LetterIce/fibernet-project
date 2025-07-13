@@ -292,6 +292,8 @@ function deletePackage(id) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
+                // Show success message and reload
+                alert(data.message);
                 location.reload();
             } else {
                 alert('Gagal menghapus paket: ' + data.message);
@@ -304,16 +306,115 @@ function deletePackage(id) {
     }
 }
 
-// Search functionality
-document.getElementById('searchInput').addEventListener('input', function() {
-    const searchTerm = this.value.toLowerCase();
-    const cards = document.querySelectorAll('[data-package-id]');
-    
-    cards.forEach(card => {
-        const text = card.textContent.toLowerCase();
-        card.style.display = text.includes(searchTerm) ? '' : 'none';
+// Global filter and sort functionality
+let allPackages = [];
+
+// Store original package data
+document.addEventListener('DOMContentLoaded', function() {
+    const packageCards = document.querySelectorAll('[data-package-id]');
+    packageCards.forEach(card => {
+        const packageData = {
+            element: card,
+            id: card.getAttribute('data-package-id'),
+            name: card.querySelector('h3').textContent.toLowerCase(),
+            price: parseInt(card.querySelector('.text-3xl').textContent.replace(/[^0-9]/g, '')),
+            speed: parseInt(card.querySelector('.bg-blue-100.text-blue-800').textContent.replace(/[^0-9]/g, '')),
+            popular: card.querySelector('.bg-yellow-100') ? true : false,
+            status: 'active', // Assuming all packages are active since there's no inactive status in the data
+            created_at: card.querySelector('.text-xs').textContent
+        };
+        allPackages.push(packageData);
     });
 });
+
+function applyFilters() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const sortBy = document.getElementById('sortBy').value;
+    const statusFilter = document.getElementById('statusFilter').value;
+    
+    let filteredPackages = [...allPackages];
+    
+    // Apply search filter
+    if (searchTerm) {
+        filteredPackages = filteredPackages.filter(pkg => 
+            pkg.name.includes(searchTerm)
+        );
+    }
+    
+    // Apply status filter
+    if (statusFilter) {
+        filteredPackages = filteredPackages.filter(pkg => 
+            pkg.status === statusFilter
+        );
+    }
+    
+    // Apply sorting
+    filteredPackages.sort((a, b) => {
+        switch (sortBy) {
+            case 'name':
+                return a.name.localeCompare(b.name);
+            case 'price':
+                return a.price - b.price;
+            case 'speed':
+                return b.speed - a.speed; // Descending for speed
+            case 'created_at':
+                return new Date(b.created_at) - new Date(a.created_at); // Newest first
+            default:
+                return 0;
+        }
+    });
+    
+    // Hide all packages first
+    allPackages.forEach(pkg => {
+        pkg.element.style.display = 'none';
+    });
+    
+    // Show filtered packages
+    const packagesGrid = document.getElementById('packagesGrid');
+    filteredPackages.forEach((pkg, index) => {
+        pkg.element.style.display = '';
+        // Reorder elements
+        packagesGrid.appendChild(pkg.element);
+    });
+    
+    // Show/hide empty state
+    const emptyState = document.querySelector('.bg-white.rounded-lg.shadow-sm.border.border-gray-200.p-12.text-center');
+    if (filteredPackages.length === 0 && !emptyState) {
+        showEmptyFilterState();
+    } else if (filteredPackages.length > 0 && document.getElementById('empty-filter-state')) {
+        document.getElementById('empty-filter-state').remove();
+    }
+}
+
+function showEmptyFilterState() {
+    const packagesGrid = document.getElementById('packagesGrid');
+    const emptyDiv = document.createElement('div');
+    emptyDiv.id = 'empty-filter-state';
+    emptyDiv.className = 'col-span-full bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center';
+    emptyDiv.innerHTML = `
+        <div class="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6">
+            <i class="fas fa-search text-gray-400 text-3xl"></i>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Tidak ada paket ditemukan</h3>
+        <p class="text-gray-600 mb-6">Coba ubah kriteria pencarian atau filter Anda.</p>
+        <button onclick="clearFilters()" class="inline-flex items-center px-6 py-3 bg-blue-600 border border-transparent rounded-lg text-base font-medium text-white hover:bg-blue-700 transition-colors">
+            <i class="fas fa-times mr-2"></i>Reset Filter
+        </button>
+    `;
+    packagesGrid.parentNode.insertBefore(emptyDiv, packagesGrid.nextSibling);
+}
+
+function clearFilters() {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('sortBy').value = 'name';
+    document.getElementById('statusFilter').value = '';
+    applyFilters();
+}
+
+// Event listeners
+document.getElementById('searchInput').addEventListener('input', applyFilters);
+document.getElementById('sortBy').addEventListener('change', applyFilters);
+document.getElementById('statusFilter').addEventListener('change', applyFilters);
 
 // Export functionality
 document.getElementById('exportBtn').addEventListener('click', function(e) {
@@ -321,7 +422,7 @@ document.getElementById('exportBtn').addEventListener('click', function(e) {
     
     // Show loading state
     const originalText = this.innerHTML;
-    this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Mengexport...';
+    this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Exporting...';
     this.style.pointerEvents = 'none';
     
     // Create a temporary link and trigger download

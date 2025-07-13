@@ -170,24 +170,50 @@ class PaketController extends BaseController
     // DELETE
     public function delete($id)
     {
+        // Ensure this is a DELETE request or AJAX request
+        if (!$this->request->isAJAX() && $this->request->getMethod() !== 'delete') {
+            return $this->response->setJSON([
+                'success' => false, 
+                'message' => 'Invalid request method'
+            ]);
+        }
+
         $package = $this->packageModel->find($id);
         
         if (!$package) {
             return $this->response->setJSON([
                 'success' => false, 
-                'message' => 'Package not found'
+                'message' => 'Paket tidak ditemukan'
             ]);
         }
 
-        if ($this->packageModel->delete($id)) {
-            return $this->response->setJSON([
-                'success' => true, 
-                'message' => 'Paket berhasil dihapus!'
-            ]);
-        } else {
+        // Check if there are users subscribed to this package
+        $subscribedUsers = $this->userModel->where('subscribe_plan_id', $id)->countAllResults();
+        
+        if ($subscribedUsers > 0) {
             return $this->response->setJSON([
                 'success' => false, 
-                'message' => 'Failed to delete package'
+                'message' => "Tidak dapat menghapus paket ini karena masih ada {$subscribedUsers} pelanggan yang menggunakan paket ini. Pindahkan pelanggan ke paket lain terlebih dahulu."
+            ]);
+        }
+
+        try {
+            if ($this->packageModel->delete($id)) {
+                return $this->response->setJSON([
+                    'success' => true, 
+                    'message' => 'Paket berhasil dihapus!'
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'success' => false, 
+                    'message' => 'Gagal menghapus paket'
+                ]);
+            }
+        } catch (\Exception $e) {
+            log_message('error', 'Error deleting package: ' . $e->getMessage());
+            return $this->response->setJSON([
+                'success' => false, 
+                'message' => 'Terjadi kesalahan saat menghapus paket'
             ]);
         }
     }
