@@ -274,11 +274,6 @@ Dashboard Overview
                     <?php endif; ?>
                 </div>
                 
-                <div class="mt-4 pt-4 border-t border-gray-200">
-                    <button class="text-primary hover:text-accent font-medium text-sm transition-colors">
-                        Lihat semua aktivitas <i class="fas fa-arrow-right ml-1"></i>
-                    </button>
-                </div>
             </div>
         </div>
     </div>

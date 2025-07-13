@@ -34,6 +34,13 @@ $routes->group('', ['filter' => 'auth'], function($routes) {
     // Tambahkan rute lain untuk user di sini, misal: profil, tagihan, dll.
 });
 
+// Dashboard Routes with Profile functionality
+$routes->group('dashboard', ['filter' => 'auth'], function($routes) {
+    $routes->get('/', 'DashboardController::index');
+    $routes->get('profile', 'ProfileController::index');
+    $routes->post('profile/update', 'ProfileController::update');
+});
+
 // Admin Routes (Grouped and Protected by a Filter)
 $routes->group('admin', ['filter' => 'auth:admin', 'namespace' => 'App\Controllers\Admin'], function($routes) {
     $routes->get('/', 'Dashboard::index');

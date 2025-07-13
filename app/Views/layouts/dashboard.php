@@ -66,6 +66,11 @@
                         <i class="fas fa-tachometer-alt w-5 text-center mr-3 <?= $isDashboard ? 'text-primary' : 'text-gray-500 group-hover:text-primary' ?>"></i>
                         <span>Dashboard</span>
                     </a>
+                    
+                    <a href="/dashboard/profile" class="flex items-center px-4 py-3 <?= $isProfile ? 'bg-secondary text-primary border-r-2 border-primary' : 'text-gray-700 hover:bg-secondary hover:text-primary' ?> rounded-lg transition-colors duration-200 group">
+                        <i class="fas fa-user w-5 text-center mr-3 <?= $isProfile ? 'text-primary' : 'text-gray-500 group-hover:text-primary' ?>"></i>
+                        <span>Profil</span>
+                    </a>
                 </div>
                 
                 <!-- Bottom Links -->
@@ -96,25 +101,19 @@
                             <h1 class="text-xl font-semibold text-gray-900"><?= $this->renderSection('page_title') ?></h1>
                         </div>
                         
-                        <!-- Right Side -->
+                        <!-- Header Actions -->
                         <div class="flex items-center space-x-4">
-                            <!-- Notifications -->
+                            <!-- User Menu -->
                             <div class="relative">
-                                <button class="text-gray-500 hover:text-primary p-2 rounded-lg hover:bg-gray-50 transition-colors">
-                                    <i class="fas fa-bell text-lg"></i>
-                                    <span class="absolute -top-1 -right-1 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">3</span>
-                                </button>
-                            </div>
-                            
-                            <!-- User Profile -->
-                            <div class="flex items-center space-x-3">
-                                <div class="hidden sm:block text-right">
-                                    <div class="text-sm font-medium text-gray-900"><?= esc(session()->get('user_name') ?? 'User') ?></div>
-                                    <div class="text-xs text-gray-500">Pelanggan Premium</div>
-                                </div>
-                                <div class="h-8 w-8 bg-primary rounded-full flex items-center justify-center">
-                                    <i class="fas fa-user text-white text-sm"></i>
-                                </div>
+                                <a href="/dashboard/profile" class="flex items-center space-x-3 text-gray-700 hover:text-primary transition-colors p-2 rounded-lg hover:bg-gray-100">
+                                    <div class="h-8 w-8 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center shadow-md">
+                                        <i class="fas fa-user text-white text-sm"></i>
+                                    </div>
+                                    <div class="hidden sm:block text-left">
+                                        <p class="text-sm font-medium text-gray-900"><?= esc(session()->get('user_name') ?? 'User') ?></p>
+                                        <p class="text-xs text-gray-500"><?= esc(session()->get('user_email') ?? '') ?></p>
+                                    </div>
+                                </a>
                             </div>
                         </div>
                     </div>
