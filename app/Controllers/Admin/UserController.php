@@ -56,7 +56,6 @@ class UserController extends BaseController
         }
 
         $userModel = new \App\Models\UserModel();
-        $subscriptionModel = new \App\Models\SubscriptionModel();
 
         // Get user data
         $user = $userModel->find($id);
@@ -75,33 +74,21 @@ class UserController extends BaseController
             ]);
         }
 
-        // Start transaction
-        $db = \Config\Database::connect();
-        $db->transStart();
-
         try {
-            // Delete user subscriptions first (foreign key constraint)
-            $subscriptionModel->where('user_id', $id)->delete();
-            
             // Delete user
-            $userModel->delete($id);
-
-            $db->transComplete();
-
-            if ($db->transStatus() === false) {
+            if ($userModel->delete($id)) {
+                return $this->response->setJSON([
+                    'success' => true,
+                    'message' => 'User berhasil dihapus'
+                ]);
+            } else {
                 return $this->response->setJSON([
                     'success' => false,
                     'message' => 'Gagal menghapus user'
                 ]);
             }
 
-            return $this->response->setJSON([
-                'success' => true,
-                'message' => 'User berhasil dihapus'
-            ]);
-
         } catch (\Exception $e) {
-            $db->transRollback();
             return $this->response->setJSON([
                 'success' => false,
                 'message' => 'Terjadi kesalahan: ' . $e->getMessage()
